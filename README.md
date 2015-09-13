@@ -7,6 +7,16 @@ release and for readers to compare different Flux implementations. You can read
 over the original repo
 [here](https://github.com/facebook/flux/tree/master/examples/flux-chat).
 
+## Changes from Original Flux Chat Example
+
+- Update React.js to 0.14rc1
+- Mock server latency when "fetching" messages (use `setTimeout`)
+- Use ES6 syntax
+- Consolidate actions into single file (actions.js)
+- Webpack instead of Browserify
+- Babel instead of Reactify
+- Remove testing for stores (for now)
+
 ## Running
 
 You must have [npm](https://www.npmjs.org/) installed on your computer.
@@ -27,8 +37,3 @@ React's JSX syntax into standard JavaScript with [Babel](https://babeljs.io/).
 
 After starting the watcher, you can open `index.html` in your browser to
 open the app.
-
-## Changes from Original Flux Chat Example
-
-- Webpack instead of Browserify
-- Babel instead of Reactify

@@ -10,29 +10,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export default {
+export function convertRawMessage(rawMessage, currentThreadID) {
+  return {
+    ...rawMessage,
+    date: new Date(rawMessage.timestamp),
+    isRead: rawMessage.threadID === currentThreadID
+  };
+};
 
-  convertRawMessage(rawMessage, currentThreadID) {
-    return {
-      id: rawMessage.id,
-      threadID: rawMessage.threadID,
-      authorName: rawMessage.authorName,
-      date: new Date(rawMessage.timestamp),
-      text: rawMessage.text,
-      isRead: rawMessage.threadID === currentThreadID
-    };
-  },
-
-  getCreatedMessageData(text, currentThreadID) {
-    var timestamp = Date.now();
-    return {
-      id: 'm_' + timestamp,
-      threadID: currentThreadID,
-      authorName: 'Bill', // hard coded for the example
-      date: new Date(timestamp),
-      text: text,
-      isRead: true
-    };
-  }
-
+export function getCreatedMessageData(text, currentThreadID) {
+  var timestamp = Date.now();
+  return {
+    id: 'm_' + timestamp,
+    threadID: currentThreadID,
+    authorName: 'Bill', // hard coded for the example
+    date: new Date(timestamp),
+    text: text,
+    isRead: true
+  };
 };

@@ -12,10 +12,9 @@
 
 import ChatAppDispatcher from '../dispatcher/ChatAppDispatcher';
 import ChatConstants from '../constants/ChatConstants';
-import ChatMessageUtils from '../utils/ChatMessageUtils';
-import {EventEmitter} from 'events';
+import * as ChatMessageUtils from '../utils/ChatMessageUtils';
+import { EventEmitter } from 'events';
 import ThreadStore from '../stores/ThreadStore';
-import assign from 'object-assign';
 
 let ActionTypes = ChatConstants.ActionTypes;
 let CHANGE_EVENT = 'change';
@@ -41,7 +40,8 @@ function _markAllInThreadRead(threadID) {
   }
 }
 
-let MessageStore = assign({}, EventEmitter.prototype, {
+let MessageStore = {
+  ...EventEmitter.prototype,
 
   emitChange() {
     this.emit(CHANGE_EVENT);
@@ -91,7 +91,7 @@ let MessageStore = assign({}, EventEmitter.prototype, {
     return this.getAllForThread(ThreadStore.getCurrentID());
   }
 
-});
+};
 
 MessageStore.dispatchToken = ChatAppDispatcher.register(action => {
 

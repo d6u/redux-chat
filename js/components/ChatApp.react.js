@@ -14,7 +14,7 @@ import MessageSection from './MessageSection.react';
 import React from 'react';
 import ThreadSection from './ThreadSection.react';
 
-let ChatApp = React.createClass({
+export default class ChatApp extends React.Component {
 
   render() {
     return (
@@ -25,6 +25,4 @@ let ChatApp = React.createClass({
     );
   }
 
-});
-
-export default ChatApp;
+};

@@ -11,7 +11,6 @@
  */
 
 import React from 'react';
-import MessageStore from '../stores/MessageStore';
 import ThreadListItem from '../components/ThreadListItem.react';
 import ThreadStore from '../stores/ThreadStore';
 import UnreadThreadStore from '../stores/UnreadThreadStore';
@@ -24,21 +23,22 @@ function getStateFromStores() {
   };
 }
 
-let ThreadSection = React.createClass({
+export default class ThreadSection extends React.Component {
 
-  getInitialState() {
-    return getStateFromStores();
-  },
+  constructor(props) {
+    super(props);
+    this.state = getStateFromStores();
+  }
 
   componentDidMount() {
-    ThreadStore.addChangeListener(this._onChange);
-    UnreadThreadStore.addChangeListener(this._onChange);
-  },
+    ThreadStore.addChangeListener(this._onChange.bind(this));
+    UnreadThreadStore.addChangeListener(this._onChange.bind(this));
+  }
 
   componentWillUnmount() {
-    ThreadStore.removeChangeListener(this._onChange);
-    UnreadThreadStore.removeChangeListener(this._onChange);
-  },
+    ThreadStore.removeChangeListener(this._onChange.bind(this));
+    UnreadThreadStore.removeChangeListener(this._onChange.bind(this));
+  }
 
   render() {
     let threadListItems = this.state.threads.map(function(thread) {
@@ -64,7 +64,7 @@ let ThreadSection = React.createClass({
           </ul>
       </div>
     );
-  },
+  }
 
   /**
    * Event handler for 'change' events coming from the stores
@@ -73,6 +73,4 @@ let ThreadSection = React.createClass({
     this.setState(getStateFromStores());
   }
 
-});
-
-module.exports = ThreadSection;
+};

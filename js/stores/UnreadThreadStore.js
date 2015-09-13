@@ -12,15 +12,15 @@
 
 import ChatAppDispatcher from '../dispatcher/ChatAppDispatcher';
 import ChatConstants from '../constants/ChatConstants';
-import {EventEmitter} from 'events';
+import { EventEmitter } from 'events';
 import MessageStore from '../stores/MessageStore';
 import ThreadStore from '../stores/ThreadStore';
-import assign from 'object-assign';
 
 let ActionTypes = ChatConstants.ActionTypes;
 let CHANGE_EVENT = 'change';
 
-let UnreadThreadStore = assign({}, EventEmitter.prototype, {
+let UnreadThreadStore = {
+  ...EventEmitter.prototype,
 
   emitChange() {
     this.emit(CHANGE_EVENT);
@@ -51,7 +51,7 @@ let UnreadThreadStore = assign({}, EventEmitter.prototype, {
     return unreadCount;
   }
 
-});
+};
 
 UnreadThreadStore.dispatchToken = ChatAppDispatcher.register(action => {
   ChatAppDispatcher.waitFor([

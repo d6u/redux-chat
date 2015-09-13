@@ -12,9 +12,8 @@
 
 import ChatAppDispatcher from '../dispatcher/ChatAppDispatcher';
 import ChatConstants from '../constants/ChatConstants';
-import ChatMessageUtils from '../utils/ChatMessageUtils';
-import {EventEmitter} from 'events';
-import assign from 'object-assign';
+import * as ChatMessageUtils from '../utils/ChatMessageUtils';
+import { EventEmitter } from 'events';
 
 let ActionTypes = ChatConstants.ActionTypes;
 let CHANGE_EVENT = 'change';
@@ -22,7 +21,8 @@ let CHANGE_EVENT = 'change';
 let _currentID = null;
 let _threads = {};
 
-let ThreadStore = assign({}, EventEmitter.prototype, {
+let ThreadStore = {
+  ...EventEmitter.prototype,
 
   init(rawMessages) {
     rawMessages.forEach(message => {
@@ -100,7 +100,7 @@ let ThreadStore = assign({}, EventEmitter.prototype, {
     return this.get(this.getCurrentID());
   }
 
-});
+};
 
 ThreadStore.dispatchToken = ChatAppDispatcher.register(action => {
 

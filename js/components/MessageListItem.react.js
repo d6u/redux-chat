@@ -10,15 +10,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-let ReactPropTypes = React.PropTypes;
-
-let MessageListItem = React.createClass({
-
-  propTypes: {
-    message: ReactPropTypes.object
-  },
+class MessageListItem extends React.Component {
 
   render() {
     let {message} = this.props;
@@ -33,6 +27,10 @@ let MessageListItem = React.createClass({
     );
   }
 
-});
+};
+
+MessageListItem.propTypes = {
+  message: PropTypes.object
+};
 
 export default MessageListItem;

@@ -10,18 +10,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import ChatThreadActionCreators from '../actions/ChatThreadActionCreators';
-import React from 'react';
+import * as Actions from '../actions';
+import React, { PropTypes } from 'react';
 import classNames from 'classnames';
 
-let ReactPropTypes = React.PropTypes;
-
-let ThreadListItem = React.createClass({
-
-  propTypes: {
-    thread: ReactPropTypes.object,
-    currentThreadID: ReactPropTypes.string
-  },
+class ThreadListItem extends React.Component {
 
   render() {
     let thread = this.props.thread;
@@ -32,7 +25,7 @@ let ThreadListItem = React.createClass({
           'thread-list-item': true,
           'active': thread.id === this.props.currentThreadID
         })}
-        onClick={this._onClick}>
+        onClick={this._onClick.bind(this)}>
         <h5 className="thread-name">{thread.name}</h5>
         <div className="thread-time">
           {lastMessage.date.toLocaleTimeString()}
@@ -42,12 +35,17 @@ let ThreadListItem = React.createClass({
         </div>
       </li>
     );
-  },
-
-  _onClick() {
-    ChatThreadActionCreators.clickThread(this.props.thread.id);
   }
 
-});
+  _onClick() {
+    Actions.clickThread(this.props.thread.id);
+  }
+
+};
+
+ThreadListItem.propTypes = {
+  thread: PropTypes.object,
+  currentThreadID: PropTypes.string
+};
 
 export default ThreadListItem;
