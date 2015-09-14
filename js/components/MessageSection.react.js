@@ -2,50 +2,36 @@ import React from 'react';
 import MessageComposer from './MessageComposer.react';
 import MessageListItem from './MessageListItem.react';
 
-function getStateFromStores() {
-  return {
-    messages: MessageStore.getAllForCurrentThread(),
-    thread: ThreadStore.getCurrent()
-  };
-}
-
-function getMessageListItem(message) {
-  return (
-    <MessageListItem
-      key={message.id}
-      message={message}
-    />
-  );
-}
-
 export default class MessageSection extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = getStateFromStores();
-  }
 
   componentDidMount() {
     this._scrollToBottom();
-    MessageStore.addChangeListener(this._onChange.bind(this));
-    ThreadStore.addChangeListener(this._onChange.bind(this));
-  }
-
-  componentWillUnmount() {
-    MessageStore.removeChangeListener(this._onChange.bind(this));
-    ThreadStore.removeChangeListener(this._onChange.bind(this));
   }
 
   render() {
-    let messageListItems = this.state.messages.map(getMessageListItem);
-    if (this.state.thread) {
+    const { currentThread, messages } = this.props;
+
+    if (currentThread) {
+      let messageListItems = currentThread.messages.map((messageID) => {
+        let message = messages[messageID];
+        return (
+          <MessageListItem
+            key={messageID}
+            message={message}
+          />
+        );
+      });
+
       return (
         <div className="message-section">
-          <h3 className="message-thread-heading">{this.state.thread.name}</h3>
+          <h3 className="message-thread-heading">{currentThread.threadName}</h3>
           <ul className="message-list" ref="messageList">
             {messageListItems}
           </ul>
-          <MessageComposer threadID={this.state.thread.id}/>
+          <MessageComposer
+            threadID={currentThread.id}
+            actions={this.props.actions}
+          />
         </div>
       );
     } else {
@@ -62,13 +48,6 @@ export default class MessageSection extends React.Component {
     if (ul) {
       ul.scrollTop = ul.scrollHeight;
     }
-  }
-
-  /**
-   * Event handler for 'change' events coming from the MessageStore
-   */
-  _onChange() {
-    this.setState(getStateFromStores());
   }
 
 };

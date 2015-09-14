@@ -10,13 +10,17 @@ class ChatApp extends Component {
   render() {
     const { threads, messages, currentThreadID, dispatch } = this.props;
     const actions = bindActionCreators(Actions, dispatch);
-        // <MessageSection actions={actions} />
     return (
       <div className="chatapp">
         <ThreadSection
           threads={threads}
           messages={messages}
           currentThreadID={currentThreadID}
+          actions={actions}
+        />
+        <MessageSection
+          currentThread={threads[currentThreadID]}
+          messages={messages}
           actions={actions}
         />
       </div>

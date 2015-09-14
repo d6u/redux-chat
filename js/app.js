@@ -5,12 +5,12 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import rootReducer from './reducers';
 import ChatApp from './components/ChatApp.react';
-import { getAllMessages } from './actions';
+import * as Actions from './actions';
 import configureStore from './store/configureStore';
 
 const store = configureStore();
 
-store.dispatch(getAllMessages());
+store.dispatch(Actions.getAllMessages());
 
 ReactDOM.render(
   <Provider store={store}>

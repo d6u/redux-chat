@@ -39,11 +39,8 @@ export function receiveAll(rawMessages) {
 export function getAllMessages() {
   return dispatch => {
     dispatch(requestRawMessages());
-    return new Promise((resolve, reject) => {
-      ChatExampleDataServer.getMessages(messages => {
-        dispatch(receiveAll(messages));
-        resolve();
-      });
+    ChatExampleDataServer.getMessages(messages => {
+      dispatch(receiveAll(messages));
     });
   };
 }
