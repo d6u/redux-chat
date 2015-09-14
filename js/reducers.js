@@ -1,9 +1,10 @@
-import get from 'lodash/object/get';
+import last      from 'lodash/array/last';
+import groupBy   from 'lodash/collection/groupBy';
+import pluck     from 'lodash/collection/pluck';
+import indexBy   from 'lodash/collection/indexBy';
 import cloneDeep from 'lodash/lang/cloneDeep';
-import groupBy from 'lodash/collection/groupBy';
-import pluck from 'lodash/collection/pluck';
-import last from 'lodash/array/last';
-import indexBy from 'lodash/collection/indexBy';
+import get       from 'lodash/object/get';
+
 import { combineReducers, applyMiddleware } from 'redux';
 import { ActionTypes } from './constants/ChatConstants';
 import { getMessages } from './ChatExampleDataServer';
@@ -36,10 +37,10 @@ import ChatMessageUtils from './utils/ChatMessageUtils';
 
 function currentThreadID(state = null, action) {
   switch (action.type) {
-  // case ActionTypes.CLICK_THREAD:
-  //   return action.threadID;
+  case ActionTypes.CLICK_THREAD:
+    return action.threadID;
   case ActionTypes.RECEIVE_RAW_MESSAGES:
-    return get(action.rawMessages, '[0].threadID', null);
+    return last(action.rawMessages).threadID;
   default:
     return state;
   }

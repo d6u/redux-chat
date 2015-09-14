@@ -27,7 +27,7 @@ class ThreadListItem extends React.Component {
   }
 
   _onClick() {
-    Actions.clickThread(this.props.thread.id);
+    this.props.actions.clickThread(this.props.thread.id);
   }
 
 };

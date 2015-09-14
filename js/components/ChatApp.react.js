@@ -8,12 +8,17 @@ import ThreadSection from './ThreadSection.react';
 class ChatApp extends Component {
 
   render() {
-    const { threads, messages, dispatch } = this.props;
+    const { threads, messages, currentThreadID, dispatch } = this.props;
     const actions = bindActionCreators(Actions, dispatch);
         // <MessageSection actions={actions} />
     return (
       <div className="chatapp">
-        <ThreadSection threads={threads} messages={messages} actions={actions} />
+        <ThreadSection
+          threads={threads}
+          messages={messages}
+          currentThreadID={currentThreadID}
+          actions={actions}
+        />
       </div>
     );
   }
@@ -23,13 +28,15 @@ class ChatApp extends Component {
 ChatApp.propTypes = {
   threads: PropTypes.object.isRequired,
   messages: PropTypes.object.isRequired,
+  currentThreadID: PropTypes.string,
   dispatch: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
   return {
     threads: state.threads,
-    messages: state.messages
+    messages: state.messages,
+    currentThreadID: state.currentThreadID
   };
 }
 
