@@ -5,7 +5,7 @@ import indexBy   from 'lodash/collection/indexBy';
 import cloneDeep from 'lodash/lang/cloneDeep';
 import get       from 'lodash/object/get';
 
-import { combineReducers, applyMiddleware } from 'redux';
+import { combineReducers, getState } from 'redux';
 import { ActionTypes } from './constants/ChatConstants';
 import { getMessages } from './ChatExampleDataServer';
 import ChatMessageUtils from './utils/ChatMessageUtils';
@@ -48,20 +48,23 @@ function currentThreadID(state = null, action) {
 
 function messages(state = {}, action) {
   switch (action.type) {
+  case ActionTypes.CLICK_THREAD:
+    let updatedMessages = cloneDeep(state);
+    Object.keys(updatedMessages).forEach(id => {
+      let message = updatedMessages[id];
+      if (message.threadID === action.threadID) {
+        message.isRead = true;
+      }
+    });
+    return updatedMessages;
   case ActionTypes.RECEIVE_RAW_MESSAGES:
     let messages = cloneDeep(action.rawMessages);
+    let lastMessageThreadID = last(action.rawMessages).threadID;
     for (let message of messages) {
-      message.isRead = false;
+      message.isRead = message.threadID === lastMessageThreadID ? true : false;
       message.date = new Date(message.timestamp);
     }
     return indexBy(messages, 'id');
-  // case ActionTypes.CREATE_MESSAGE:
-  //   let messages = cloneDeep(state);
-  //   let {text, currentThreadID} = action;
-  //   let msg = ChatMessageUtils.getCreatedMessageData(text, currentThreadID);
-  //   msg.isRead = true;
-  //   messages.push(msg);
-  //   return messages;
   default:
     return state;
   }
@@ -81,7 +84,6 @@ function threads(state = {}, action) {
       };
     });
     return threads;
-  // case ActionTypes.CREATE_MESSAGE:
   default:
     return state;
   }
