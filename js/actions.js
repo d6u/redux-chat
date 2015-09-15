@@ -1,5 +1,6 @@
 import { ActionTypes } from './constants/ChatConstants';
 import * as ChatExampleDataServer from './ChatExampleDataServer';
+import * as ChatMessageUtils from './utils/ChatMessageUtils';
 
 export function clickThread(threadID) {
   return {
@@ -48,6 +49,10 @@ export function getAllMessages() {
 export function postNewMessage(text, currentThreadID) {
   return dispatch => {
     dispatch(createMessage(text, currentThreadID));
-    // ChatExampleDataServer.postMessage({text, currentThreadID})
+    let message = ChatMessageUtils.getCreatedMessageData(text, currentThreadID);
+    let payload = { message, threadID: currentThreadID };
+    ChatExampleDataServer.postMessage(payload, message => {
+      dispatch(receiveCreatedMessage(message));
+    });
   }
 }

@@ -5,10 +5,10 @@ import indexBy   from 'lodash/collection/indexBy';
 import cloneDeep from 'lodash/lang/cloneDeep';
 import get       from 'lodash/object/get';
 
-import { combineReducers, getState } from 'redux';
+import { combineReducers } from 'redux';
 import { ActionTypes } from './constants/ChatConstants';
 import { getMessages } from './ChatExampleDataServer';
-import ChatMessageUtils from './utils/ChatMessageUtils';
+import * as ChatMessageUtils from './utils/ChatMessageUtils';
 
 /**
  * State shape
@@ -48,7 +48,7 @@ function currentThreadID(state = null, action) {
 
 function messages(state = {}, action) {
   switch (action.type) {
-  case ActionTypes.CLICK_THREAD:
+  case ActionTypes.CLICK_THREAD: {
     let updatedMessages = cloneDeep(state);
     Object.keys(updatedMessages).forEach(id => {
       let message = updatedMessages[id];
@@ -57,6 +57,15 @@ function messages(state = {}, action) {
       }
     });
     return updatedMessages;
+  }
+  case ActionTypes.RECEIVE_RAW_CREATED_MESSAGE: {
+    let message = action.rawMessage;
+    message.date = new Date(message.timestamp);
+    message.isRead = true;
+    let updatedMessages = cloneDeep(state);
+    updatedMessages[message.id] = message;
+    return updatedMessages;
+  }
   case ActionTypes.RECEIVE_RAW_MESSAGES:
     let messages = cloneDeep(action.rawMessages);
     let lastMessageThreadID = last(action.rawMessages).threadID;
@@ -72,7 +81,15 @@ function messages(state = {}, action) {
 
 function threads(state = {}, action) {
   switch (action.type) {
-  case ActionTypes.RECEIVE_RAW_MESSAGES:
+  case ActionTypes.RECEIVE_RAW_CREATED_MESSAGE: {
+    let threads = cloneDeep(state);
+    let message = action.rawMessage;
+    let thread = threads[message.threadID];
+    thread.lastMessage = message.id;
+    thread.messages.push(message.id);
+    return threads;
+  }
+  case ActionTypes.RECEIVE_RAW_MESSAGES: {
     let threads = groupBy(action.rawMessages, 'threadID');
     Object.keys(threads).forEach(id => {
       let messages = threads[id];
@@ -84,6 +101,7 @@ function threads(state = {}, action) {
       };
     });
     return threads;
+  }
   default:
     return state;
   }

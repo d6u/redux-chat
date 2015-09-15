@@ -30,7 +30,7 @@ class MessageComposer extends React.Component {
       event.preventDefault();
       let text = this.state.text.trim();
       if (text) {
-        Actions.createMessage(text, this.props.threadID);
+        this.props.actions.postNewMessage(text, this.props.threadID);
       }
       this.setState({text: ''});
     }
