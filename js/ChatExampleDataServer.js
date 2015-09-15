@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/lang/cloneDeep';
+
 /**
  * This file contains mock methods for fetching data from server.
  * It uses setTimeout to simulate server latency.
@@ -64,27 +66,37 @@ let messages = [
   }
 ];
 
+let threadNameMap = (function () {
+  let map = {};
+  messages.forEach(({threadID, threadName}) => {
+    map[threadID] = threadName;
+  });
+  return map;
+})();
+
 export function getMessages(callback) {
   setTimeout(() => {
-    callback(messages);
+    callback(cloneDeep(messages));
   }, NETWORK_LATENCY);
 };
 
-export function postMessage({message, threadName}, callback) {
+export function postMessage(message, callback) {
   let timestamp = Date.now();
   let id = 'm_' + timestamp;
-  let threadID = message.threadID || ('t_' + Date.now());
+  let threadID = message.threadID;
+
   let createdMessage = {
     id,
     threadID,
-    threadName,
+    threadName: threadNameMap[threadID],
     authorName: message.authorName,
     text: message.text,
     timestamp
   };
+
   messages.push(createdMessage);
 
   setTimeout(() => {
-    callback(createdMessage);
+    callback(cloneDeep(createdMessage));
   }, NETWORK_LATENCY);
 };

@@ -9,18 +9,18 @@ export function clickThread(threadID) {
   };
 }
 
-export function createMessage(text, currentThreadID) {
+export function createMessage(message) {
   return {
     type: ActionTypes.CREATE_MESSAGE,
-    text: text,
-    currentThreadID: currentThreadID
+    message
   };
 }
 
-export function receiveCreatedMessage(createdMessage) {
+export function receiveCreatedMessage(createdMessage, tempMessageID) {
   return {
     type: ActionTypes.RECEIVE_RAW_CREATED_MESSAGE,
-    rawMessage: createdMessage
+    rawMessage: createdMessage,
+    tempMessageID
   };
 }
 
@@ -48,11 +48,10 @@ export function getAllMessages() {
 
 export function postNewMessage(text, currentThreadID) {
   return dispatch => {
-    dispatch(createMessage(text, currentThreadID));
     let message = ChatMessageUtils.getCreatedMessageData(text, currentThreadID);
-    let payload = { message, threadID: currentThreadID };
-    ChatExampleDataServer.postMessage(payload, message => {
-      dispatch(receiveCreatedMessage(message));
+    dispatch(createMessage(message));
+    ChatExampleDataServer.postMessage(message, createdMessage => {
+      dispatch(receiveCreatedMessage(createdMessage, message.id));
     });
   }
 }
