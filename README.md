@@ -8,8 +8,8 @@
 
 Instead of using the official Facebook Flux dispatcher, Redux Chat example is
 using [Redux](https://github.com/rackt/redux) with no dispatcher, a singleton
-store pure function action creators and reducers. Details please see official
-Redux README file.
+store, pure function action creators and reducers. Please see Details on
+official Redux repo.
 
 ## Running
 
