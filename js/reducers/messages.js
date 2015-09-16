@@ -1,6 +1,7 @@
 import last from 'lodash/array/last';
 import indexBy from 'lodash/collection/indexBy';
-import cloneDeep from 'lodash/lang/cloneDeep';
+import { compose } from 'redux';
+import u from 'updeep';
 import { ActionTypes } from '../constants/ChatConstants';
 import * as ChatMessageUtils from '../utils/ChatMessageUtils';
 
@@ -9,14 +10,10 @@ export default function messages(state = {}, action) {
   switch (action.type) {
 
     case ActionTypes.CLICK_THREAD: {
-      let messages = cloneDeep(state);
-      Object.keys(messages).forEach(id => {
-        let message = messages[id];
-        if (message.threadID === action.threadID) {
-          message.isRead = true;
-        }
-      });
-      return messages;
+      let markRead = u({isRead: true});
+      return u(
+        u.map(m => m.threadID === action.threadID ? markRead(m) : m),
+        state);
     }
 
     case ActionTypes.CREATE_MESSAGE: {
@@ -29,21 +26,21 @@ export default function messages(state = {}, action) {
     case ActionTypes.RECEIVE_RAW_CREATED_MESSAGE: {
       let message = ChatMessageUtils.convertRawMessage(action.rawMessage);
       message.isRead = true;
-      let updatedMessages = cloneDeep(state);
-      delete updatedMessages[action.tempMessageID];
-      updatedMessages[message.id] = message;
-      return updatedMessages;
+      return compose(
+        u({[message.id]: message}),
+        u(u.omit(action.tempMessageID))
+      )(state);
     }
 
     case ActionTypes.RECEIVE_RAW_MESSAGES: {
-      let messages = cloneDeep(action.rawMessages);
-      let lastThreadID = last(messages).threadID;
-      for (let message of messages) {
-        message.isRead = message.threadID === lastThreadID ? true : false;
-        message.date = new Date(message.timestamp);
-      }
-      let messageDict = indexBy(messages, 'id');
-      return {...state, ...messageDict};
+      let lastThreadID = last(action.rawMessages).threadID;
+      let messages = indexBy(action.rawMessages, 'id');
+      let formatMessage = u.map(message => u({
+        isRead: message.threadID === lastThreadID,
+        date: new Date(message.timestamp)
+      }, message));
+      let updated = u(formatMessage, messages);
+      return {...state, ...updated};
     }
 
     default:
