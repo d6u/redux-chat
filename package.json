@@ -1,9 +1,9 @@
 {
-  "name": "flux-chat",
-  "version": "0.0.2",
-  "description": "Example Flux chat application primarily intended to explain the use of Dispatcher.waitFor().",
-  "repository": "https://github.com/facebook/flux",
-  "author": "Bill Fisher",
+  "name": "redux-chat",
+  "version": "0.0.1",
+  "description": "Example Flux chat application with Redux",
+  "repository": "https://github.com/d6u/redux-chat.git",
+  "author": "Daiwei Lu",
   "main": "js/app.js",
   "dependencies": {
     "classnames": "^2.1.3",
